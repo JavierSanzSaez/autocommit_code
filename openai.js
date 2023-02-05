@@ -54,3 +54,21 @@ function generatePrompt(animal) {
     -------
     `;
 }
+
+function generateSummarizedPrompt(diff, openai_answer){
+  return `
+  What follows "-------" is a git diff for a potential commit.
+    Reply with a markdown unordered list of 5 possible, different Git commit messages 
+    (a Git commit message should be concise but also try to describe 
+    the important changes in the commit), order the list by what you think 
+    would be the best commit message first, and don't include any other text 
+    but the 5 messages in your response.
+    ------- 
+    ${diff}
+    -------
+    ${openai_answer}
+
+    Which could be summarized in a sentence of 50 characters as:
+    
+    `;
+}
