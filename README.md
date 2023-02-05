@@ -1,3 +1,4 @@
+![Pollo](https://img.shields.io/badge/Pollo-%F0%9F%91%8D-yellow)
 # autocommit-code README
 
 This is the README for your extension "autocommit-code". After writing up a brief description, we recommend including the following sections.
