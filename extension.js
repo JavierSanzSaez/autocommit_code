@@ -25,19 +25,30 @@ function activate(context) {
 		vscode.window.showInformationMessage('Calculating diffs...');
 
 		//  Get the diff including untracked files (see https://stackoverflow.com/a/52093887)
-		let git_command = "git --no-pager diff; for next in $( git ls-files --others --exclude-standard ) ; do git --no-pager diff --no-index /dev/null $next; done;"
+		let git_diffs = [];
+		let errors = []
 
-		 git_command = "ls"
+		let workspace_folders = vscode.workspace.workspaceFolders;
 
+		workspace_folders?.map(folder => {
+			let path = folder.uri.path;
+			let git_command = `cd ${path};git --no-pager diff --cached`
 
-		const bash_result = exec(git_command, function(error, stdout, stderr){
-			if (stderr){
-				vscode.window.showInformationMessage("Error: ", stderr);
-			}
-			else{
-				vscode.window.showInformationMessage("Result: ", stdout);
-			}
+			const bash_result = exec(git_command, function(error, stdout, stderr){
+				if (stderr){
+					errors.push(error)
+				}
+				else{
+					git_diffs.push({
+						path: path,
+						diff:stdout
+					});
+				}
+			});
 		});
+
+		console.log(git_diffs);
+		
 	
 	});
 
