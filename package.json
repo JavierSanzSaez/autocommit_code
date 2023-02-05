@@ -10,14 +10,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:autocommit-code.helloWorld"
+    "onCommand:autocommit-code.generateCommitMessage"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "autocommit-code.helloWorld",
-        "title": "Hello World"
+        "command": "autocommit-code.generateCommitMessage",
+        "title": "Generate Commit Message"
       }
     ]
   },
