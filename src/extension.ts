@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import { exec } from 'child_process';
 import * as vscode from 'vscode';
+import { AutocommitProvider } from './autocommitProvider';
 
 class FolderDiff {
 	path: string;
@@ -21,6 +22,12 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "autocommit-code" is now active!');
 
+	let workspace_folders = vscode.workspace.workspaceFolders;
+	let workspace_folders_paths: string[] = [];
+	workspace_folders?.map(folder => {
+		workspace_folders_paths.push(folder.uri.path)
+	})
+
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
@@ -32,7 +39,6 @@ export function activate(context: vscode.ExtensionContext) {
 		let git_diffs: FolderDiff[] = [];
 		let errors: string[] = [];
 
-		let workspace_folders = vscode.workspace.workspaceFolders;
 
 		workspace_folders?.map(folder => {
 			let path = folder.uri.path;
@@ -52,6 +58,9 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(generateCommitMessage);
+
+	vscode.window.registerTreeDataProvider( 'autocommit-scm',new AutocommitProvider(workspace_folders_paths));
+
 }
 
 // This method is called when your extension is deactivated

@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:autocommit-code.generateCommitMessage"
+    "onCommand:autocommit-code.generateCommitMessage",
+    "onView:autocommit-scm"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -19,7 +20,15 @@
         "command": "autocommit-code.generateCommitMessage",
         "title": "Generate Commit Message"
       }
-    ]
+    ],
+    "views": {
+      "scm": [
+        {
+          "id": "autocommit-scm",
+          "name": "Auto Commit"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
