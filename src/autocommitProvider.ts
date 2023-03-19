@@ -1,31 +1,96 @@
 import * as vscode from 'vscode';
 
-export class AutocommitProvider implements vscode.TreeDataProvider<PathDiff>{
-    diff_paths: string[];
+export class AutocommitProvider implements vscode.WebviewViewProvider{
 
-    constructor(diff_paths:string[]){
+    private diff_paths: string[];
+    private readonly _extensionUri: vscode.Uri;
+
+    private _view?: vscode.WebviewView;
+
+    constructor(diff_paths:string[], extensionUri: vscode.Uri){
         this.diff_paths=diff_paths;
+        this._extensionUri = extensionUri;
     }
 
-    getTreeItem(element: PathDiff): vscode.TreeItem | Thenable<vscode.TreeItem> {
-        return element;
-    }
+    public resolveWebviewView(
+		webviewView: vscode.WebviewView,
+		context: vscode.WebviewViewResolveContext,
+		_token: vscode.CancellationToken,
+	) {
+		this._view = webviewView;
 
-    getChildren(element?: PathDiff | undefined): vscode.ProviderResult<PathDiff[]> {
-        let children: PathDiff[] = [];
-        this.diff_paths.forEach((diff_path) =>{
-            children.push(new PathDiff(diff_path,vscode.TreeItemCollapsibleState.None))
-        })
-        return Promise.resolve(children)
+		webviewView.webview.options = {
+			// Allow scripts in the webview
+			enableScripts: true,
+
+			localResourceRoots: [
+				this._extensionUri
+			]
+		};
+
+		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+
+		webviewView.webview.onDidReceiveMessage(data => {
+			switch (data.type) {
+				case 'colorSelected':
+					{
+						vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`#${data.value}`));
+						break;
+					}
+			}
+		});
+	}
+
+    private _getHtmlForWebview(webview: vscode.Webview){
+
+        // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
+		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'main.js'));
+
+		// Do the same for the stylesheet.
+		const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'reset.css'));
+		const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'vscode.css'));
+		const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'main.css'));
+
+		// Use a nonce to only allow a specific script to be run.
+		const nonce = getNonce();
+
+        return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+
+            <!--
+                Use a content security policy to only allow loading styles from our extension directory,
+                and only allow scripts that have a specific nonce.
+                (See the 'webview-sample' extension sample for img-src content security policy examples)
+            -->
+            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <link href="${styleResetUri}" rel="stylesheet">
+            <link href="${styleVSCodeUri}" rel="stylesheet">
+            <link href="${styleMainUri}" rel="stylesheet">
+
+            <title>Cat Colors</title>
+        </head>
+        <body>
+            <ul class="color-list">
+            </ul>
+
+            <button class="add-color-button">Generate commit message</button>
+
+            <script nonce="${nonce}" src="${scriptUri}"></script>
+            </body>
+        </html>`;
     }
 }
 
-class PathDiff extends vscode.TreeItem{
-    constructor(
-        public readonly label: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState
-    ){
-        super(label, collapsibleState);
-        this.tooltip = `${this.label}`;
-    }
+function getNonce() {
+	let text = '';
+	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (let i = 0; i < 32; i++) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	return text;
 }

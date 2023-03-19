@@ -59,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(generateCommitMessage);
 
-	vscode.window.registerTreeDataProvider( 'autocommit-scm',new AutocommitProvider(workspace_folders_paths));
+	vscode.window.registerWebviewViewProvider( 'autocommit-scm', new AutocommitProvider(workspace_folders_paths, context.extensionUri));
 
 }
 

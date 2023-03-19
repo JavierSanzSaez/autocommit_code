@@ -47,7 +47,7 @@ function activate(context) {
         console.log(git_diffs);
     });
     context.subscriptions.push(generateCommitMessage);
-    vscode.window.registerTreeDataProvider('autocommit-scm', new autocommitProvider_1.AutocommitProvider(workspace_folders_paths));
+    vscode.window.registerWebviewViewProvider('autocommit-scm', new autocommitProvider_1.AutocommitProvider(workspace_folders_paths, context.extensionUri));
 }
 exports.activate = activate;
 // This method is called when your extension is deactivated

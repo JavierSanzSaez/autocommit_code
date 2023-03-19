@@ -9,6 +9,7 @@
   "categories": [
     "Other"
   ],
+  
   "activationEvents": [
     "onCommand:autocommit-code.generateCommitMessage",
     "onView:autocommit-scm"
@@ -25,7 +26,8 @@
       "scm": [
         {
           "id": "autocommit-scm",
-          "name": "Auto Commit"
+          "name": "Auto Commit",
+          "type": "webview"
         }
       ]
     }
@@ -49,7 +51,7 @@
     "eslint": "^8.33.0",
     "glob": "^8.1.0",
     "mocha": "^10.1.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "openai": "^3.1.0"
