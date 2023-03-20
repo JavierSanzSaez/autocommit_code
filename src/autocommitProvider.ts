@@ -31,12 +31,15 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
 		webviewView.webview.onDidReceiveMessage(data => {
-			switch (data.type) {
+			switch (data.command) {
 				case 'colorSelected':
 					{
 						vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`#${data.value}`));
 						break;
 					}
+				case 'askGPT': {
+					console.log(`Received message from button ${data.path}`);
+				}
 			}
 		});
 	}
@@ -106,11 +109,9 @@ function showWorkspacePaths(diffPaths: string[]){
 
 		result += `<div class="path ${folder.toLowerCase()}">
 			<span>${folder.toUpperCase()}</span>
-			<ul class="diff-list ${folder.toLowerCase()}></ul>
-			<button class="add-color-button">GPT-3 me this!</button>
-		</div>`
+			<button onclick="requestGPT("${path}")">GPT-3 me this!</button>
+		</div>`;
 	});
-
 	return result;
 
 }

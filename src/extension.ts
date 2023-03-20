@@ -22,10 +22,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "autocommit-code" is now active!');
 
-	let workspace_folders = vscode.workspace.workspaceFolders;
-	let workspace_folders_paths: string[] = [];
-	workspace_folders?.map(folder => {
-		workspace_folders_paths.push(folder.uri.path)
+	let workspaceFolders = vscode.workspace.workspaceFolders;
+	let workspaceFoldersPaths: string[] = [];
+	workspaceFolders?.map(folder => {
+		workspaceFoldersPaths.push(folder.uri.path)
 	})
 
 	// The command has been defined in the package.json file
@@ -36,30 +36,30 @@ export function activate(context: vscode.ExtensionContext) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Calculating diffs...');
 
-		let git_diffs: FolderDiff[] = [];
+		let gitDiffs: FolderDiff[] = [];
 		let errors: string[] = [];
 
 
-		workspace_folders?.map(folder => {
+		workspaceFolders?.map(folder => {
 			let path = folder.uri.path;
-			let git_command = `cd ${path};git --no-pager diff --cached`
+			let gitCommand = `cd ${path};git --no-pager diff --cached`
 
-			const bash_result = exec(git_command, function(error, stdout, stderr){
+			const bashResult = exec(gitCommand, function(error, stdout, stderr){
 				if (stderr){
 					errors.push(String(error))
 				}
 				else{
-					git_diffs.push(new FolderDiff(path,stdout));
+					gitDiffs.push(new FolderDiff(path,stdout));
 				}
 			});
 		});
 
-		console.log(git_diffs);
+		console.log(gitDiffs);
 	});
 
 	context.subscriptions.push(generateCommitMessage);
 
-	vscode.window.registerWebviewViewProvider( 'autocommit-scm', new AutocommitProvider(workspace_folders_paths, context.extensionUri));
+	vscode.window.registerWebviewViewProvider( 'autocommit-scm', new AutocommitProvider(workspaceFoldersPaths, context.extensionUri));
 
 }
 

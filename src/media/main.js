@@ -95,6 +95,13 @@
         colors.push({ value: getNewCalicoColor() });
         updateColorList(colors);
     }
+
+    function requestGPT(path) {
+            vscode.postMessage({
+                command: 'askGPT',
+                path:path,
+            });
+    }
 }());
 
 
