@@ -2,13 +2,13 @@ import * as vscode from 'vscode';
 
 export class AutocommitProvider implements vscode.WebviewViewProvider{
 
-    private diff_paths: string[];
+    private diffPaths: string[];
     private readonly _extensionUri: vscode.Uri;
 
     private _view?: vscode.WebviewView;
 
-    constructor(diff_paths:string[], extensionUri: vscode.Uri){
-        this.diff_paths=diff_paths;
+    constructor(diffPaths:string[], extensionUri: vscode.Uri){
+        this.diffPaths=diffPaths;
         this._extensionUri = extensionUri;
     }
 
@@ -78,8 +78,10 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
             <ul class="color-list">
             </ul>
 
-            <button class="add-color-button">Generate commit message</button>
-
+			<h2>Current paths:</h2>
+			
+			${showWorkspacePaths(this.diffPaths)}
+			
             <script nonce="${nonce}" src="${scriptUri}"></script>
             </body>
         </html>`;
@@ -93,4 +95,22 @@ function getNonce() {
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 	}
 	return text;
+}
+
+function showWorkspacePaths(diffPaths: string[]){
+	let result:string = '';
+
+	diffPaths.forEach((path:string)=>{
+
+		let folder = path.split('/').at(-1) || "";
+
+		result += `<div class="path ${folder.toLowerCase()}">
+			<span>${folder.toUpperCase()}</span>
+			<ul class="diff-list ${folder.toLowerCase()}></ul>
+			<button class="add-color-button">GPT-3 me this!</button>
+		</div>`
+	});
+
+	return result;
+
 }

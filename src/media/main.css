@@ -38,3 +38,8 @@ body {
 	border: none;
 	margin: 0 auto;
 }
+
+.path{
+	display: flex;
+	flex-direction: column;
+}

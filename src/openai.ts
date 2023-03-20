@@ -5,7 +5,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-function generatePrompt(diff: string){
+const generatePrompt = (diff: string) => {
   return `
   What follows "-------" is a git diff for a potential commit.
     Reply with a markdown unordered list of 5 possible, different Git commit messages 
@@ -20,8 +20,7 @@ function generatePrompt(diff: string){
     `;
 }
 
-export default async function (diffs) {
-
+const askGPT = async (diffs:string) => {
   if (diffs.trim().length === 0) {
     return{
       error: {
@@ -38,7 +37,7 @@ export default async function (diffs) {
     });
     console.log(completion);
     return {result: completion.data.choices[0].text}
-  } catch(error) {
+  } catch(error:any) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
       console.error(error.response.status, error.response.data);
@@ -54,3 +53,4 @@ export default async function (diffs) {
   }
 }
 
+export default askGPT;
