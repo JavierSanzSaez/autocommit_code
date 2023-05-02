@@ -2,3 +2,4 @@ node_modules
 resources/*
 .env
 package-lock.json
+out
