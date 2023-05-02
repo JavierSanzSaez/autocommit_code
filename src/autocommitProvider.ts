@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { generateDiff } from './common';
+import { generateDiff, processGPTResponse } from './common';
 import askGPT from './openai';
 
 export class AutocommitProvider implements vscode.WebviewViewProvider{
@@ -36,11 +36,15 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 			switch (data.command) {
 				case 'askGPT': {
 					const diffPath = generateDiff(data.path);
-					const diffsGPT = askGPT(diffPath).then((response)=> {
-						console.log(response);
-						
+					askGPT(diffPath).then((response)=> {						
 						if (response.error) {
-
+							// TODO: Show a popup indicating the error
+							console.log(response.error);
+							
+						}
+						else {
+							const diffOptions = processGPTResponse(response.result);
+							this._view.webview.postMessage({ type: 'GPTResponse', path:data.path, commitSuggestions: diffOptions });
 						}
 					});
 				}
@@ -113,7 +117,8 @@ function showWorkspacePaths(diffPaths: string[]){
 
 		result += `<div class="path">
 			<span>${folder.toUpperCase()}</span>
-			<button class="gpt-path" value="${path}">GPT-3 me this!</button>
+			<ul id="${path}"></ul>
+			<button class="gpt-path-button" value="${path}">GPT-3 me this!</button>
 		</div>`;	
 	});
 	return result;
