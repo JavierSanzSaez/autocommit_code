@@ -32,11 +32,6 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 
 		webviewView.webview.onDidReceiveMessage(data => {
 			switch (data.command) {
-				case 'colorSelected':
-					{
-						vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`#${data.value}`));
-						break;
-					}
 				case 'askGPT': {
 					console.log(`Received message from button ${data.path}`);
 				}
@@ -107,10 +102,10 @@ function showWorkspacePaths(diffPaths: string[]){
 
 		let folder = path.split('/').at(-1) || "";
 
-		result += `<div class="path ${folder.toLowerCase()}">
+		result += `<div class="path">
 			<span>${folder.toUpperCase()}</span>
-			<button onclick="requestGPT("${path}")">GPT-3 me this!</button>
-		</div>`;
+			<button class="gpt-path" value="${path}">GPT-3 me this!</button>
+		</div>`;	
 	});
 	return result;
 

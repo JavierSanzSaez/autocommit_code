@@ -25,8 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let workspaceFolders = vscode.workspace.workspaceFolders;
 	let workspaceFoldersPaths: string[] = [];
 	workspaceFolders?.map(folder => {
-		workspaceFoldersPaths.push(folder.uri.path)
-	})
+		workspaceFoldersPaths.push(folder.uri.path);
+	});
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
