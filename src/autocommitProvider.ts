@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { generateDiff } from './common';
+import askGPT from './openai';
 
 export class AutocommitProvider implements vscode.WebviewViewProvider{
 
@@ -33,7 +35,14 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 		webviewView.webview.onDidReceiveMessage(data => {
 			switch (data.command) {
 				case 'askGPT': {
-					console.log(`Received message from button ${data.path}`);
+					const diffPath = generateDiff(data.path);
+					const diffsGPT = askGPT(diffPath).then((response)=> {
+						console.log(response);
+						
+						if (response.error) {
+
+						}
+					});
 				}
 			}
 		});
