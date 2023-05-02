@@ -1,8 +1,13 @@
 import { Configuration, OpenAIApi } from "openai";
+import {config as configDotenv} from 'dotenv';
+import {resolve} from 'path';
+
+configDotenv({path: resolve(__dirname, "../.env")});
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
 const openai = new OpenAIApi(configuration);
 
 const generatePrompt = (diff: string) => {
@@ -24,33 +29,31 @@ const askGPT = async (diffs:string) => {
   if (diffs.trim().length === 0) {
     return{
       error: {
-        message: "Please enter a valid animal",
+        message: "There are no staged changes. Please stage your changes first.",
       }
     };
   }
 
   try {
-    const completion = await openai.createCompletion({
+    const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      prompt: generatePrompt(diffs),
+      messages: [{role:"user", "content": generatePrompt(diffs)}],
       temperature: 0.2,
     });
-    console.log(completion);
-    return {result: completion.data.choices[0].text}
+    return {result: completion.data.choices[0].message?.content};
   } catch(error:any) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
       console.error(error.response.status, error.response.data);
-        return{error: error.response.data}
+        return{error: error.response.data};
     } else {
-      console.error(`Error with OpenAI API request: ${error.message}`);
       return{
         error: {
-          message: 'An error occurred during your request.',
+          message: `Error with OpenAI API request: ${error.message}`,
         }
-      }
+      };
     }
   }
-}
+};
 
 export default askGPT;
