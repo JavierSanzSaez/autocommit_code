@@ -16,9 +16,8 @@ const generatePrompt = (diff: string) => {
     Reply with a markdown unordered list of 5 possible, different Git commit messages 
     (a Git commit message should be concise but also try to describe 
     the important changes in the commit in maximum 50 characters), order the list by what you think 
-    would be the best commit message first. Additionally, add a sentence that summarizes 
-    the 5 options in a sentence of 50 characters.
-    Don't include any other text but the 5 messages in your response and the summary.
+    would be the best commit message first.
+    Don't include any other text but the 5 messages in your response.
     -------
     ${diff}
     -------    
