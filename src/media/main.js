@@ -3,7 +3,7 @@
 (function () {
     const vscode = acquireVsCodeApi();
 
-    let commitSuggestionsEmpty = [];
+    let workspaceFoldersEmpty = [];
 
     var list = document.getElementsByClassName("gpt-path-button");
     for (let element of list) {
@@ -13,17 +13,18 @@
                 path: element.value,
             });
         });
-        commitSuggestionsEmpty.push({
+        workspaceFoldersEmpty.push({
             path: element.value,
             commitSuggestions: [],
+            commitSummary: '',
         });
     }
 
-    vscode.setState({ commitSuggestions: commitSuggestionsEmpty });
+    vscode.setState({ workspaceFolders: workspaceFoldersEmpty });
 
-    let commitSuggestions = vscode.getState() .commitSuggestions;
+    let workspaceFolders = vscode.getState().workspaceFolders;
 
-    updateList(commitSuggestions);
+    updateList(workspaceFolders);
 
     window.addEventListener('message', event => {
         const message = event.data; // The json data that the extension sent
@@ -31,24 +32,25 @@
             case 'GPTResponse':
                 {
                     const oldState = vscode.getState();
-                    let suggestions = oldState.commitSuggestions;
-                    suggestions.forEach((element, index) => {
+                    let workspaceFolders = oldState.workspaceFolders;
+                    workspaceFolders.forEach((element, index) => {
                         if (element.path === message.path) {
-                            suggestions[index] = {
+                            workspaceFolders[index] = {
                                 path: element.path,
-                                commitSuggestions: message.commitSuggestions
+                                commitSuggestions: message.commitSuggestions,
+                                commitSummary: message.commitSummary,
                             };
                         }
                     });
-                    vscode.setState({commitSuggestions: suggestions});
-                    updateList(suggestions);
+                    vscode.setState({workspaceFolders: workspaceFolders});
+                    updateList(workspaceFolders);
                     break;
                 }
         }
     });
 
-    function updateList(commitSuggestions) {
-        commitSuggestions.forEach(element => {
+    function updateList(workspaceFolders) {
+        workspaceFolders.forEach(element => {
             const ul = document.getElementById(`${element.path}`);
             ul.textContent = '';
             let index = 0;
@@ -75,6 +77,43 @@
 
                 ul.appendChild(li);
                 index += 1;
+            }
+            if (element.commitSummary) {
+                const ul = document.getElementById(`${element.path}-summary`);
+                ul.className = 'top-border';
+                ul.textContent = '';
+
+                const liLabel = document.createElement('li');
+                liLabel.className = 'color-entry';
+                const label = document.createElement('p');
+                label.innerHTML = 'Summary:';
+
+                liLabel.appendChild(label);
+
+                const liSummary = document.createElement('li');
+                liSummary.className = 'color-entry';
+
+                const input = document.createElement('input');
+                input.disabled = true;
+                input.value = element.commitSummary;
+                input.className = 'color-input';
+                input.type = 'text';
+                input.id = ' summary';
+    
+
+                liSummary.appendChild(input);
+                const copy = document.createElement('a');
+                copy.className = 'copy-button';
+                copy.ariaLabel = 'Copy commit message';
+                copy.addEventListener('click', copyToClipboard);
+
+                const icon = document.createElement('i');
+                icon.className = 'codicon codicon-copy';
+                copy.appendChild(icon);
+
+                liSummary.appendChild(copy);
+                ul.appendChild(liLabel);
+                ul.appendChild(liSummary);
             }
         });
     }

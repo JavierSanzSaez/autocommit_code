@@ -14,13 +14,10 @@ const generatePrompt = (diff: string) => {
   return `
   What follows "-------" is a git diff for a potential commit.
     Reply with a markdown unordered list of 5 possible, different Git commit messages 
-    (a Git commit message should be concise but also try to describe 
-    the important changes in the commit in maximum 50 characters), order the list by what you think 
-    would be the best commit message first.
-    Don't include any other text but the 5 messages in your response.
+    (a Git commit message should be concise but also try to describe the important changes in the commit in maximum 10 words).
+    Then, summarize the 5 commit messages in a single and highly concise commit message, adding "Summary:" at the beginning. This summary CANNOT have more than 6 words.
     -------
     ${diff}
-    -------    
     `;
 }
 

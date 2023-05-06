@@ -10,5 +10,6 @@ export function generateDiff(path: string) {
 
 export function processGPTResponse(response: string | undefined) {
     const options = response?.replaceAll("- ","").split("\n").slice(0, 5);
-    return options;
+    const summary = response?.split("Summary: ")[1];
+    return {options, summary};
 };
