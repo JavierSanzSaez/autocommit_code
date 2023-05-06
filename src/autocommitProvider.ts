@@ -38,15 +38,18 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 					const diffPath = generateDiff(data.path);
 					askGPT(diffPath).then((response)=> {						
 						if (response.error) {
-							// TODO: Show a popup indicating the error
-							console.log(response.error);
-							
+							vscode.window.showErrorMessage('Error while fetching the suggestions:' + response.error);
 						}
 						else {
 							const diffOptions = processGPTResponse(response.result);
 							this._view.webview.postMessage({ type: 'GPTResponse', path:data.path, commitSuggestions: diffOptions });
 						}
 					});
+					break;
+				}
+				case 'CopySuggestion' : {
+					vscode.window.showInformationMessage('Commit suggestion copied to clipboard!');
+					break;
 				}
 			}
 		});
@@ -58,9 +61,10 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'main.js'));
 
 		// Do the same for the stylesheet.
-		const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'reset.css'));
 		const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'vscode.css'));
 		const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'main.css'));
+
+		const codiconsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
 
 		// Use a nonce to only allow a specific script to be run.
 		const nonce = getNonce();
@@ -73,24 +77,18 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
             <!--
                 Use a content security policy to only allow loading styles from our extension directory,
                 and only allow scripts that have a specific nonce.
-                (See the 'webview-sample' extension sample for img-src content security policy examples)
             -->
-            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+            <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${webview.cspSource}; style-src ${webview.cspSource}; script-src 'nonce-${nonce}' ${webview.cspSource};">
 
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <link href="${styleResetUri}" rel="stylesheet">
             <link href="${styleVSCodeUri}" rel="stylesheet">
             <link href="${styleMainUri}" rel="stylesheet">
+			<link href="${codiconsUri}" rel="stylesheet">
 
             <title>Cat Colors</title>
         </head>
         <body>
-            <ul class="color-list">
-            </ul>
-
-			<h2>Current paths:</h2>
-			
 			${showWorkspacePaths(this.diffPaths)}
 			
             <script nonce="${nonce}" src="${scriptUri}"></script>

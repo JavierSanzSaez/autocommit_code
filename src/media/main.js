@@ -51,6 +51,7 @@
         commitSuggestions.forEach(element => {
             const ul = document.getElementById(`${element.path}`);
             ul.textContent = '';
+            let index = 0;
             for (let suggestion of element.commitSuggestions){
                 const li = document.createElement('li');
                 li.className = 'color-entry';
@@ -58,10 +59,33 @@
                 input.className = 'color-input';
                 input.type = 'text';
                 input.value = suggestion;
+                input.disabled = true;
                 li.appendChild(input);
 
+                const copy = document.createElement('a');
+                copy.className = 'copy-button';
+                copy.ariaLabel = 'Copy commit message';
+                copy.addEventListener('click', copyToClipboard);
+
+                const icon = document.createElement('i');
+                icon.className = 'codicon codicon-copy';
+                copy.appendChild(icon);
+
+                li.appendChild(copy);
+
                 ul.appendChild(li);
+                index += 1;
             }
+        });
+    }
+
+    function copyToClipboard(evt) {
+
+         // Copy the text inside the text field
+        navigator.clipboard.writeText(evt.currentTarget.parentNode.firstChild.value);
+
+        vscode.postMessage({
+            command: 'CopySuggestion',
         });
     }
 

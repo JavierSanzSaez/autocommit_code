@@ -42,4 +42,34 @@ body {
 .path{
 	display: flex;
 	flex-direction: column;
+	padding: 0.5rem 0;
+}
+
+.path > span {
+	padding-bottom: 1rem;
+    font-weight: 700;
+}
+
+ul {
+    margin: 0 0 1rem 0;
+	padding-left: 0;
+}
+
+.copy-button {
+	width: fit-content;
+	padding: 2px;
+	font-size: 14px;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	justify-content: center;
+	padding-right: 0.5rem;
+
+	color: var(--vscode-input-foreground);
+    outline-color: var(--vscode-input-border);
+    background-color: var(--vscode-input-background);
+}
+
+i .codicon {
+	font-size: 1.5rem;
 }
