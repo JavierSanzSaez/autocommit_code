@@ -3,6 +3,8 @@
   "displayName": "autocommit-code",
   "description": "A VSCode Extension that creates commit messages with OpenAI API",
   "version": "1.0.0",
+  "icon": "images/autocommit-icon.png",
+  "publisher": "Javier Sanz Saez",
   "repository": {
     "url": "https://github.com/JavierSanzSaez/autocommit_code"
   },
@@ -13,7 +15,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:autocommit-code.generateCommitMessage",
     "onView:autocommit-scm"
   ],
   "main": "./out/extension.js",
@@ -27,7 +28,7 @@
         }
       ]
     },
-    "configuration":[
+    "configuration": [
       {
         "title": "AutoCommit",
         "properties": {
@@ -42,11 +43,12 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
+    "compile": "tsc -p ./ && copyfiles src/media/* out/media",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint ./src --ext .ts,.js,.css",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "copy-files": "copyfiles -f -u 1 src/media/*.js src/media/*.css out/media"
   },
   "devDependencies": {
     "@types/glob": "^8.0.1",
@@ -63,6 +65,7 @@
   },
   "dependencies": {
     "@vscode/codicons": "^0.0.33",
+    "copyfiles": "^2.4.1",
     "dotenv": "^16.0.3",
     "openai": "^3.2.1"
   }

@@ -61,11 +61,11 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
     private _getHtmlForWebview(webview: vscode.Webview){
 
         // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
-		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'main.js'));
+		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'out', 'media', 'src', 'media', 'main.js'));
 
 		// Do the same for the stylesheet.
-		const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'vscode.css'));
-		const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'src', 'media', 'main.css'));
+		const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'out', 'media', 'src', 'media', 'vscode.css'));
+		const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'out', 'media', 'src', 'media', 'main.css'));
 
 		const codiconsUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
 
