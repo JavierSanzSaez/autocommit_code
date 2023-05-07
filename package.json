@@ -2,7 +2,10 @@
   "name": "autocommit-code",
   "displayName": "autocommit-code",
   "description": "A VSCode Extension that creates commit messages with OpenAI API",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/JavierSanzSaez/autocommit_code"
+  },
   "engines": {
     "vscode": "^1.75.0"
   },
