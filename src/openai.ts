@@ -19,7 +19,7 @@ const generatePrompt = (diff: string) => {
     -------
     ${diff}
     `;
-}
+};
 
 const askGPT = async (diffs:string) => {
   if (diffs.trim().length === 0) {

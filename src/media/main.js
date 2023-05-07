@@ -46,6 +46,24 @@
                     updateList(workspaceFolders);
                     break;
                 }
+            case 'loadingButton': {
+                if (message.value){
+                    const button = document.getElementById(`button-${message.path}`);
+                    button.innerHTML = '';
+                    const spinner = document.createElement('i');
+                    spinner.className = 'codicon codicon-refresh rotating';
+                    button.appendChild(spinner);
+                    const span = document.createElement('span');
+                    span.className = 'button-span';
+                    span.innerHTML = 'Loading...';
+                    button.appendChild(span);
+                }
+                else{
+                    const button = document.getElementById(`button-${message.path}`);
+                    button.innerHTML = 'GPT-3 me this!';
+                }
+                break;
+            }
         }
     });
 
@@ -55,6 +73,7 @@
             ul.textContent = '';
             let index = 0;
             for (let suggestion of element.commitSuggestions){
+                ul.className = 'margin-bottom';
                 const li = document.createElement('li');
                 li.className = 'color-entry';
                 const input = document.createElement('input');

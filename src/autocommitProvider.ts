@@ -35,14 +35,17 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 		webviewView.webview.onDidReceiveMessage(data => {
 			switch (data.command) {
 				case 'askGPT': {
+					this._view?.webview.postMessage({ type: 'loadingButton', value: true, path: data.path });
 					const diffPath = generateDiff(data.path);
 					askGPT(diffPath).then((response)=> {						
 						if (response.error) {							
 							vscode.window.showErrorMessage('Error while fetching the suggestions: ' + response.error.message);
+							this._view?.webview.postMessage({ type: 'loadingButton', value: false, path: data.path });
 						}
 						else {
 							const {options, summary} = processGPTResponse(response.result);
-							this._view.webview.postMessage({ type: 'GPTResponse', path:data.path, commitSuggestions: options, commitSummary: summary });
+							this._view?.webview.postMessage({ type: 'GPTResponse', path:data.path, commitSuggestions: options, commitSummary: summary });
+							this._view?.webview.postMessage({ type: 'loadingButton', value: false, path: data.path });
 						}
 					});
 					break;
@@ -119,7 +122,7 @@ function showWorkspacePaths(diffPaths: string[]){
 			<div class="summary">
 			<ul id="${path}-summary"></ul>
 			</div>
-			<button class="gpt-path-button" value="${path}">GPT-3 me this!</button>
+			<button class="gpt-path-button" id ="button-${path}" value="${path}">GPT-3 me this!</button>
 		</div>`;	
 	});
 	return result;

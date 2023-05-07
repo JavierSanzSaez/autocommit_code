@@ -39,19 +39,19 @@ body {
 	margin: 0 auto;
 }
 
-.path{
+.path {
 	display: flex;
 	flex-direction: column;
 	padding: 0.5rem 0;
 }
 
-.path > span {
+.path>span {
 	padding-bottom: 1rem;
-    font-weight: 700;
+	font-weight: 700;
 }
 
 ul {
-    margin: 0 0 1rem 0;
+	margin: 0;
 	padding-left: 0;
 }
 
@@ -66,8 +66,8 @@ ul {
 	padding-right: 0.5rem;
 
 	color: var(--vscode-input-foreground);
-    outline-color: var(--vscode-input-border);
-    background-color: var(--vscode-input-background);
+	outline-color: var(--vscode-input-border);
+	background-color: var(--vscode-input-background);
 }
 
 i .codicon {
@@ -76,4 +76,38 @@ i .codicon {
 
 .top-border {
 	border-top: 1px dotted var(--vscode-foreground);
+}
+
+.margin-bottom {
+	margin: 0 0 1rem 0;
+}
+
+@keyframes rotating {
+	from {
+		-ms-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+
+	to {
+		-ms-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+.rotating {
+	-webkit-animation: rotating 2s linear infinite;
+	-moz-animation: rotating 2s linear infinite;
+	-ms-animation: rotating 2s linear infinite;
+	-o-animation: rotating 2s linear infinite;
+	animation: rotating 2s linear infinite;
+}
+
+.button-span {
+	padding-left: 0.5rem;
 }
