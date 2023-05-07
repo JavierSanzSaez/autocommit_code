@@ -38,7 +38,7 @@ export class AutocommitProvider implements vscode.WebviewViewProvider{
 					this._view?.webview.postMessage({ type: 'loadingButton', value: true, path: data.path });
 					const diffPath = generateDiff(data.path);
 					askGPT(diffPath).then((response)=> {						
-						if (response.error) {							
+						if (response.error) {														
 							vscode.window.showErrorMessage('Error while fetching the suggestions: ' + response.error.message);
 							this._view?.webview.postMessage({ type: 'loadingButton', value: false, path: data.path });
 						}

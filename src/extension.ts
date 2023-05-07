@@ -7,6 +7,18 @@ import { AutocommitProvider } from './autocommitProvider';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
+	const configuration: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('autocommit');
+	const value: any = configuration.get('privateKey');
+
+	if (!value) {
+		vscode.window.showInputBox({ prompt: 'Please provide your API key from OpenAi' }).then((privateKey) => {
+			console.log(privateKey);
+		
+			configuration.update('privateKey', privateKey);
+		});
+
+	}
+
 	let workspaceFolders = vscode.workspace.workspaceFolders;
 	let workspaceFoldersPaths: string[] = [];
 	workspaceFolders?.map(folder => {

@@ -15,12 +15,6 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "autocommit-code.generateCommitMessage",
-        "title": "Generate Commit Message"
-      }
-    ],
     "views": {
       "scm": [
         {
@@ -29,7 +23,19 @@
           "type": "webview"
         }
       ]
-    }
+    },
+    "configuration":[
+      {
+        "title": "AutoCommit",
+        "properties": {
+          "autocommit.privateKey": {
+            "type": "string",
+            "default": "",
+            "description": "The OpenAI private Key."
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
