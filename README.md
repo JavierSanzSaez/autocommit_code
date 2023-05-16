@@ -1,6 +1,6 @@
 # AutoCommit, a VSCode Extension in Typescript
 
-|&nbsp;&nbsp;[Repository](https://github.com/JavierSanzSaez/autocommit_code)&nbsp;&nbsp;|&nbsp;&nbsp;[Issues](https://github.com/JavierSanzSaez/autocommit_code/issues)&nbsp;&nbsp;|
+|&nbsp;&nbsp;[Repository](https://github.com/JavierSanzSaez/autocommit_code)&nbsp;&nbsp;|&nbsp;&nbsp;[Issues](https://github.com/JavierSanzSaez/autocommit_code/issues)&nbsp;&nbsp;|&nbsp;&nbsp;[Marketplace](https://marketplace.visualstudio.com/items?itemName=JavierSanzSaez.autocommit-code)&nbsp;&nbsp;
 
 This VSCode Extension will attach itself to your Version Control Panel and will show you 5 different commit messages based on your git diff output!
 
