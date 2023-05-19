@@ -4,7 +4,7 @@
   "description": "A VSCode Extension that creates commit messages with OpenAI API",
   "version": "1.1.0",
   "icon": "images/autocommit-icon.png",
-  "publisher": "Javier Sanz Saez",
+  "publisher": "JavierSanzSaez",
   "repository": {
     "url": "https://github.com/JavierSanzSaez/autocommit_code"
   },
@@ -36,6 +36,16 @@
             "type": "string",
             "default": "",
             "description": "The OpenAI private Key."
+          },
+          "autocommit.numberOfSuggestions": {
+            "type": "number",
+            "default": 5,
+            "description": "The number of suggestions that GPT will output"
+          },
+          "autocommit.lengthOfSuggestions": {
+            "type": "number",
+            "default": 6,
+            "description": "The number of words to which GPT will try to fix the length of the suggestions"
           }
         }
       }

@@ -28,7 +28,10 @@ export function generateDiff(path: string) {
 };
 
 export function processGPTResponse(response: string | undefined) {
-    const options = response?.replaceAll("- ","").split("\n").slice(0, 5);
+    const configuration: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('autocommit');
+    const numberOfSuggestions: number|undefined = configuration.get('numberOfSuggestions', 5);
+
+    const options = response?.replaceAll("- ","").replaceAll('"','').split("\n").slice(0, numberOfSuggestions);
     const summary = response?.split("Summary: ")[1];
     return {options, summary};
 };
