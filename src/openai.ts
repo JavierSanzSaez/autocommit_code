@@ -2,11 +2,15 @@ import { Configuration, OpenAIApi } from "openai";
 import * as vscode from 'vscode';
 
 const generatePrompt = (diff: string) => {
+  const configuration: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('autocommit');
+  const numberOfSuggestions: number = configuration.get('numberOfSuggestions', 5);
+  const lengthOfSuggestions: number = configuration.get('lengthOfSuggestions', 6);
+
   return `
   What follows "-------" is a git diff for a potential commit.
-    Reply with a markdown unordered list of 5 possible, different Git commit messages 
-    (a Git commit message should be concise but also try to describe the important changes in the commit in maximum 10 words).
-    Then, summarize the 5 commit messages in a single and highly concise commit message, adding "Summary:" at the beginning. This summary CANNOT have more than 6 words.
+    Reply with a markdown unordered list of ${numberOfSuggestions} possible, different Git commit messages 
+    (a Git commit message should be concise but also try to describe the important changes in the commit in maximum ${lengthOfSuggestions} words).
+    Then, summarize the ${numberOfSuggestions} commit messages in a single and highly concise commit message, adding "Summary:" at the beginning. This summary CANNOT have more than ${lengthOfSuggestions} words.
     -------
     ${diff}
     `;
