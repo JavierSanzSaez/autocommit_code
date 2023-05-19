@@ -9,9 +9,9 @@ import { getGitFolders } from './common';
 export function activate(context: vscode.ExtensionContext) {
 
 	const configuration: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration('autocommit');
-	const value: any = configuration.get('privateKey');
+	const privateKey: string|undefined = configuration.get('privateKey');
 
-	if (!value) {
+	if (!privateKey) {
 		vscode.window.showInputBox({ prompt: 'Please provide your API key from OpenAi' }).then((privateKey) => {		
 			configuration.update('privateKey', privateKey);
 		});
