@@ -3,3 +3,4 @@ resources/*
 .env
 package-lock.json
 out
+autocommit-code-*
